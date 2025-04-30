@@ -75,7 +75,7 @@ const AddExpenseDialog: React.FC<AddExpenseDialogProps> = ({ categories, onTrans
     resolver: zodResolver(formSchema),
     defaultValues: {
       description: '',
-      amount: undefined, // Initialize amount as undefined
+      amount: '' as unknown as number, // Initialize amount as empty string
       categoryId: '',
       date: new Date(),
     },
@@ -149,7 +149,7 @@ const AddExpenseDialog: React.FC<AddExpenseDialogProps> = ({ categories, onTrans
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
                     {/* Use type="number" but handle validation with zod coerce */}
-                    <Input type="number" step="0.01" placeholder="0.00" {...field} />
+                    <Input type="number" step="0.01" placeholder="0.00" {...field} value={field.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

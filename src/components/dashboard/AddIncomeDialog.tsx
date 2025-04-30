@@ -74,7 +74,7 @@ const AddIncomeDialog: React.FC<AddIncomeDialogProps> = ({ categories, onTransac
     resolver: zodResolver(formSchema),
     defaultValues: {
       description: '',
-      amount: undefined,
+      amount: '' as unknown as number, // Initialize amount as empty string
       categoryId: '',
       date: new Date(),
     },
@@ -145,7 +145,8 @@ const AddIncomeDialog: React.FC<AddIncomeDialogProps> = ({ categories, onTransac
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <Input type="number" step="0.01" placeholder="0.00" {...field} />
+                     {/* Use type="number" but handle validation with zod coerce, ensure value is never undefined */}
+                    <Input type="number" step="0.01" placeholder="0.00" {...field} value={field.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
