@@ -11,7 +11,7 @@ import BudgetGoalsOverview from "@/components/dashboard/BudgetGoalsOverview";
 import TransactionList from "@/components/dashboard/TransactionList";
 import ExpenseCalendar from '@/components/dashboard/ExpenseCalendar'; // Import ExpenseCalendar
 import AddExpenseDialog from '@/components/dashboard/AddExpenseDialog'; // Import AddExpenseDialog
-import { mockCategories, mockTransactions, mockBudgetGoals, currentMonthData as initialCurrentMonthData } from "@/data/mockData";
+import { mockCategories, mockTransactions, mockBudgetGoals } from "@/data/mockData";
 import { DollarSign, TrendingUp, TrendingDown } from 'lucide-react';
 import type { Category, Transaction, BudgetGoal } from '@/types';
 import { Button } from '@/components/ui/button'; // Import Button
@@ -66,6 +66,7 @@ export default function DashboardPage() {
     <div className="flex min-h-screen w-full flex-col bg-background">
       <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-card px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 py-4">
         <h1 className="text-xl font-semibold">BudgetFlow Dashboard</h1>
+         {/* TODO: Add AddIncomeDialog here */}
          <AddExpenseDialog categories={categories} onTransactionAdded={handleAddTransaction} />
       </header>
       <main className="flex flex-1 flex-col gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
@@ -77,6 +78,7 @@ export default function DashboardPage() {
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
+              {/* Income is already dynamic based on transactions state */}
               <div className="text-2xl font-bold text-green-600">+${currentIncome.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground">This month</p>
             </CardContent>
@@ -107,10 +109,10 @@ export default function DashboardPage() {
 
         {/* Main Content Area with Tabs */}
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 md:w-[500px]"> {/* Adjusted grid columns */}
+          <TabsList className="grid w-full grid-cols-2 md:w-[350px]"> {/* Adjusted grid columns and width */}
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="details">Details</TabsTrigger>
-            <TabsTrigger value="calendar">Calendar</TabsTrigger> {/* Added Calendar Tab Trigger */}
+            {/* Removed Calendar Tab Trigger */}
           </TabsList>
 
           {/* Overview Tab */}
@@ -127,6 +129,8 @@ export default function DashboardPage() {
                     categories={categories} // Use state
                     limit={8}
                   />
+                 {/* Moved ExpenseCalendar here */}
+                 <ExpenseCalendar transactions={transactions} />
               </div>
               <div className="lg:col-span-3">
                   <SpendingChart
@@ -174,10 +178,7 @@ export default function DashboardPage() {
              </Card>
           </TabsContent>
 
-           {/* Calendar Tab */}
-           <TabsContent value="calendar" className="mt-4">
-             <ExpenseCalendar transactions={transactions} /> {/* Pass all transactions from state */}
-           </TabsContent>
+           {/* Removed Calendar Tab Content */}
 
         </Tabs>
       </main>
