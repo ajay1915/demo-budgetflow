@@ -1,3 +1,4 @@
+
 import type { LucideIcon } from 'lucide-react';
 
 export interface Category {
@@ -6,6 +7,7 @@ export interface Category {
   // Store the icon name as a string instead of the component
   iconName: keyof typeof import('lucide-react');
   isCustom?: boolean;
+  type?: 'income' | 'expense'; // Optional type for better filtering
 }
 
 export interface Transaction {

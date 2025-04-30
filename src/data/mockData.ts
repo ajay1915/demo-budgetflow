@@ -1,21 +1,24 @@
+
 import type { Category, Transaction, BudgetGoal } from '@/types';
 // Remove direct lucide icon imports here as they are no longer stored in the data structure
 // import { ShoppingBasket, Home, Car, Ticket, Utensils, Zap, TrendingUp, Tag } from 'lucide-react';
 
 export const mockCategories: Category[] = [
-  { id: 'cat1', name: 'Groceries', iconName: 'ShoppingBasket' },
-  { id: 'cat2', name: 'Rent/Mortgage', iconName: 'Home' },
-  { id: 'cat3', name: 'Transportation', iconName: 'Car' },
-  { id: 'cat4', name: 'Entertainment', iconName: 'Ticket' },
-  { id: 'cat5', name: 'Dining Out', iconName: 'Utensils' },
-  { id: 'cat6', name: 'Utilities', iconName: 'Zap' },
-  { id: 'cat7', name: 'Salary', iconName: 'TrendingUp' }, // Example Income Category
-  { id: 'cat8', name: 'Miscellaneous', iconName: 'Tag', isCustom: true },
+  { id: 'cat1', name: 'Groceries', iconName: 'ShoppingBasket', type: 'expense' }, // Specify type
+  { id: 'cat2', name: 'Rent/Mortgage', iconName: 'Home', type: 'expense' },
+  { id: 'cat3', name: 'Transportation', iconName: 'Car', type: 'expense' },
+  { id: 'cat4', name: 'Entertainment', iconName: 'Ticket', type: 'expense' },
+  { id: 'cat5', name: 'Dining Out', iconName: 'Utensils', type: 'expense' },
+  { id: 'cat6', name: 'Utilities', iconName: 'Zap', type: 'expense' },
+  { id: 'cat7', name: 'Salary', iconName: 'TrendingUp', type: 'income' }, // Specify type
+  { id: 'cat9', name: 'Trading Profits', iconName: 'DollarSign', type: 'income' }, // Added Trading Profits category
+  { id: 'cat8', name: 'Miscellaneous', iconName: 'Tag', isCustom: true, type: 'expense' },
 ];
 
 export const mockTransactions: Transaction[] = [
   // Income
   { id: 'txn1', type: 'income', categoryId: 'cat7', amount: 3000, date: new Date(2024, 6, 1), description: 'Monthly Salary' }, // July 1st
+  { id: 'txn13', type: 'income', categoryId: 'cat9', amount: 150.75, date: new Date(2024, 6, 15), description: 'Daily Trading Profit' }, // Example Trading Profit
 
   // Expenses
   { id: 'txn2', type: 'expense', categoryId: 'cat2', amount: 1200, date: new Date(2024, 6, 1), description: 'Rent' },

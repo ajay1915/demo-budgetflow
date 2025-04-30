@@ -11,6 +11,7 @@ import BudgetGoalsOverview from "@/components/dashboard/BudgetGoalsOverview";
 import TransactionList from "@/components/dashboard/TransactionList";
 import ExpenseCalendar from '@/components/dashboard/ExpenseCalendar'; // Import ExpenseCalendar
 import AddExpenseDialog from '@/components/dashboard/AddExpenseDialog'; // Import AddExpenseDialog
+import AddIncomeDialog from '@/components/dashboard/AddIncomeDialog'; // Import AddIncomeDialog
 import { mockCategories, mockTransactions, mockBudgetGoals } from "@/data/mockData";
 import { DollarSign, TrendingUp, TrendingDown } from 'lucide-react';
 import type { Category, Transaction, BudgetGoal } from '@/types';
@@ -49,7 +50,7 @@ export default function DashboardPage() {
       ...currentTransactions.filter(t => t.type === 'expense').map(t => t.categoryId),
       ...currentGoals.map(g => g.categoryId)
   ]);
-  const relevantCategories = categories.filter(c => relevantCategoryIds.has(c.id) && c.name !== 'Salary'); // Exclude income category from cards
+  const relevantCategories = categories.filter(c => relevantCategoryIds.has(c.id) && c.name !== 'Salary' && c.name !== 'Trading Profits'); // Exclude income category from cards
 
 
   // Handler to add a new transaction to the state (for demo)
@@ -64,10 +65,12 @@ export default function DashboardPage() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-card px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 py-4">
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-card px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 py-4">
         <h1 className="text-xl font-semibold">BudgetFlow Dashboard</h1>
-         {/* TODO: Add AddIncomeDialog here */}
-         <AddExpenseDialog categories={categories} onTransactionAdded={handleAddTransaction} />
+         <div className="flex items-center gap-2">
+           <AddIncomeDialog categories={categories} onTransactionAdded={handleAddTransaction} />
+           <AddExpenseDialog categories={categories} onTransactionAdded={handleAddTransaction} />
+         </div>
       </header>
       <main className="flex flex-1 flex-col gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
         {/* Key Insights Row */}
@@ -160,8 +163,11 @@ export default function DashboardPage() {
                    {/* Display categories with goals but no spending yet */}
                   {currentGoals
                     .filter(goal => {
-                      const hasSpending = currentTransactions.some(t => t.categoryId === goal.categoryId && t.type === 'expense');
-                      return !hasSpending;
+                       const category = categories.find(c => c.id === goal.categoryId);
+                       // Only show goal-only cards for expense categories
+                       if (!category || category.name === 'Salary' || category.name === 'Trading Profits') return false;
+                       const hasSpending = currentTransactions.some(t => t.categoryId === goal.categoryId && t.type === 'expense');
+                       return !hasSpending;
                      })
                     .map(goal => {
                        const category = categories.find(c => c.id === goal.categoryId);

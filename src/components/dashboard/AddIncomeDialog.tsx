@@ -33,7 +33,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose, // Import DialogClose
+  DialogClose,
 } from '@/components/ui/dialog';
 import {
   Form,
@@ -47,7 +47,6 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import type { Category, Transaction } from '@/types';
-// import { addTransactionAction } from '@/actions/addTransaction'; // We'll simulate this client-side for now
 
 const formSchema = z.object({
   description: z.string().min(1, { message: 'Description is required.' }).max(100),
@@ -60,52 +59,50 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-interface AddExpenseDialogProps {
+interface AddIncomeDialogProps {
   categories: Category[];
   onTransactionAdded: (transaction: Omit<Transaction, 'id'>) => void; // Callback for client-side update
 }
 
-const AddExpenseDialog: React.FC<AddExpenseDialogProps> = ({ categories, onTransactionAdded }) => {
+const AddIncomeDialog: React.FC<AddIncomeDialogProps> = ({ categories, onTransactionAdded }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
-  // Filter out categories explicitly marked as 'income' or named 'Salary'/'Trading Profits'
-  const expenseCategories = categories.filter(c => c.type !== 'income' && c.name !== 'Salary' && c.name !== 'Trading Profits');
+  // Filter for income categories (e.g., Salary, Trading Profits)
+  const incomeCategories = categories.filter(c => c.name === 'Salary' || c.name === 'Trading Profits' || c.type === 'income'); // Added explicit type check
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       description: '',
-      amount: undefined, // Initialize amount as undefined
+      amount: undefined,
       categoryId: '',
       date: new Date(),
     },
   });
 
   async function onSubmit(values: FormValues) {
-    // Simulate adding the transaction (replace with server action later)
     const newTransactionData: Omit<Transaction, 'id'> = {
       ...values,
-      type: 'expense',
+      type: 'income', // Set type to 'income'
     };
 
     try {
-      // Call the callback to update the parent component's state
       onTransactionAdded(newTransactionData);
-      console.log('Simulated transaction added:', newTransactionData); // Log simulation
+      console.log('Simulated income added:', newTransactionData);
 
-      // Reset form and close dialog
       form.reset();
-      setIsOpen(false); // Close the dialog programmatically
+      setIsOpen(false);
 
       toast({
-        title: 'Expense Added',
-        description: `${values.description} for $${values.amount.toFixed(2)}`,
+        title: 'Income Added',
+        description: `${values.description} of $${values.amount.toFixed(2)}`,
+        className: "bg-green-100 border-green-300 text-green-800", // Optional: Success styling
       });
     } catch (error) {
-      console.error('Error adding transaction:', error);
+      console.error('Error adding income:', error);
       toast({
         title: 'Error',
-        description: 'Failed to add expense. Please try again.',
+        description: 'Failed to add income. Please try again.',
         variant: 'destructive',
       });
     }
@@ -114,16 +111,16 @@ const AddExpenseDialog: React.FC<AddExpenseDialogProps> = ({ categories, onTrans
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button size="sm">
+        <Button size="sm" variant="outline"> {/* Maybe use outline for secondary action */}
           <PlusCircle className="mr-2 h-4 w-4" />
-          Add Expense
+          Add Income
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Expense</DialogTitle>
+          <DialogTitle>Add New Income</DialogTitle>
           <DialogDescription>
-            Enter the details of your expense below. Click save when you're done.
+            Enter the details of your income below. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -135,7 +132,7 @@ const AddExpenseDialog: React.FC<AddExpenseDialogProps> = ({ categories, onTrans
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Coffee, Groceries" {...field} />
+                    <Input placeholder="e.g., Daily Trading Profit, Salary" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -148,7 +145,6 @@ const AddExpenseDialog: React.FC<AddExpenseDialogProps> = ({ categories, onTrans
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    {/* Use type="number" but handle validation with zod coerce */}
                     <Input type="number" step="0.01" placeholder="0.00" {...field} />
                   </FormControl>
                   <FormMessage />
@@ -164,11 +160,11 @@ const AddExpenseDialog: React.FC<AddExpenseDialogProps> = ({ categories, onTrans
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a category" />
+                        <SelectValue placeholder="Select an income category" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {expenseCategories.map((category) => (
+                      {incomeCategories.map((category) => (
                         <SelectItem key={category.id} value={category.id}>
                           {category.name}
                         </SelectItem>
@@ -217,12 +213,11 @@ const AddExpenseDialog: React.FC<AddExpenseDialogProps> = ({ categories, onTrans
               )}
             />
             <DialogFooter>
-              {/* Use DialogClose for the Cancel button */}
                <DialogClose asChild>
                  <Button type="button" variant="outline">Cancel</Button>
                </DialogClose>
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? 'Saving...' : 'Save Expense'}
+                {form.formState.isSubmitting ? 'Saving...' : 'Save Income'}
               </Button>
             </DialogFooter>
           </form>
@@ -232,4 +227,4 @@ const AddExpenseDialog: React.FC<AddExpenseDialogProps> = ({ categories, onTrans
   );
 };
 
-export default AddExpenseDialog;
+export default AddIncomeDialog;
