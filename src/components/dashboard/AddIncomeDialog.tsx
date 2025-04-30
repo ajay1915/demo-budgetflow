@@ -74,7 +74,7 @@ const AddIncomeDialog: React.FC<AddIncomeDialogProps> = ({ categories, onTransac
     resolver: zodResolver(formSchema),
     defaultValues: {
       description: '',
-      amount: '' as unknown as number, // Initialize amount as empty string
+      amount: undefined, // Initialize amount as undefined for controlled input
       categoryId: '',
       date: new Date(),
     },
@@ -96,7 +96,7 @@ const AddIncomeDialog: React.FC<AddIncomeDialogProps> = ({ categories, onTransac
       toast({
         title: 'Income Added',
         description: `${values.description} of $${values.amount.toFixed(2)}`,
-        className: "bg-green-100 border-green-300 text-green-800", // Optional: Success styling
+        // Optional: Success styling can be added via className prop if needed, relying on theme now
       });
     } catch (error) {
       console.error('Error adding income:', error);
@@ -111,7 +111,8 @@ const AddIncomeDialog: React.FC<AddIncomeDialogProps> = ({ categories, onTransac
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="outline"> {/* Maybe use outline for secondary action */}
+        {/* Changed variant to outline */}
+        <Button size="sm" variant="outline">
           <PlusCircle className="mr-2 h-4 w-4" />
           Add Income
         </Button>
@@ -145,8 +146,8 @@ const AddIncomeDialog: React.FC<AddIncomeDialogProps> = ({ categories, onTransac
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                     {/* Use type="number" but handle validation with zod coerce, ensure value is never undefined */}
-                    <Input type="number" step="0.01" placeholder="0.00" {...field} value={field.value ?? ''} />
+                     {/* Use type="number" but handle validation with zod coerce, ensure value is never undefined for controlled input */}
+                    <Input type="number" step="0.01" placeholder="0.00" {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.valueAsNumber || undefined)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

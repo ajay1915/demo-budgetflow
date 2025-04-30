@@ -75,7 +75,7 @@ const AddExpenseDialog: React.FC<AddExpenseDialogProps> = ({ categories, onTrans
     resolver: zodResolver(formSchema),
     defaultValues: {
       description: '',
-      amount: '' as unknown as number, // Initialize amount as empty string
+      amount: undefined, // Initialize amount as undefined for controlled input
       categoryId: '',
       date: new Date(),
     },
@@ -114,6 +114,7 @@ const AddExpenseDialog: React.FC<AddExpenseDialogProps> = ({ categories, onTrans
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
+        {/* Use default variant (primary) */}
         <Button size="sm">
           <PlusCircle className="mr-2 h-4 w-4" />
           Add Expense
@@ -148,8 +149,8 @@ const AddExpenseDialog: React.FC<AddExpenseDialogProps> = ({ categories, onTrans
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    {/* Use type="number" but handle validation with zod coerce */}
-                    <Input type="number" step="0.01" placeholder="0.00" {...field} value={field.value ?? ''} />
+                    {/* Use type="number" but handle validation with zod coerce, ensure value is controlled */}
+                    <Input type="number" step="0.01" placeholder="0.00" {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.valueAsNumber || undefined)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -221,6 +222,7 @@ const AddExpenseDialog: React.FC<AddExpenseDialogProps> = ({ categories, onTrans
                <DialogClose asChild>
                  <Button type="button" variant="outline">Cancel</Button>
                </DialogClose>
+               {/* Save button uses default variant */}
               <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? 'Saving...' : 'Save Expense'}
               </Button>

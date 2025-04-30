@@ -17,6 +17,7 @@ import { DollarSign, TrendingUp, TrendingDown } from 'lucide-react';
 import type { Category, Transaction, BudgetGoal } from '@/types';
 import { Button } from '@/components/ui/button'; // Import Button
 import { PlusCircle } from 'lucide-react'; // Import PlusCircle for the button
+import { cn } from '@/lib/utils'; // Import cn for conditional classes
 
 export default function DashboardPage() {
   // --- State Management for Demo ---
@@ -65,44 +66,52 @@ export default function DashboardPage() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-card px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 py-4">
-        <h1 className="text-xl font-semibold">BudgetFlow Dashboard</h1>
-         <div className="flex items-center gap-2">
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-card px-4 sm:px-6 py-4"> {/* Increased header height slightly */}
+        <h1 className="text-xl font-semibold text-foreground">BudgetFlow Dashboard</h1>
+         <div className="flex items-center gap-3"> {/* Increased gap */}
+           {/* AddIncomeDialog uses outline variant now */}
            <AddIncomeDialog categories={categories} onTransactionAdded={handleAddTransaction} />
+           {/* AddExpenseDialog uses default (primary) variant */}
            <AddExpenseDialog categories={categories} onTransactionAdded={handleAddTransaction} />
          </div>
       </header>
-      <main className="flex flex-1 flex-col gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+      <main className="flex flex-1 flex-col gap-6 p-4 sm:px-6 md:gap-8"> {/* Increased gap */}
         {/* Key Insights Row */}
-        <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-3">
-          <Card className="shadow-md">
+        <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-3"> {/* Increased gap */}
+          <Card className="shadow-md hover:shadow-lg transition-shadow duration-200">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Income</CardTitle>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              {/* Income is already dynamic based on transactions state */}
-              <div className="text-2xl font-bold text-green-600">+${currentIncome.toFixed(2)}</div>
+              {/* Use text-primary or a specific positive color class from theme if available */}
+              <div className="text-2xl font-bold text-[hsl(var(--chart-2))]">{/* Using a chart color for positive emphasis */}
+                +${currentIncome.toFixed(2)}
+              </div>
               <p className="text-xs text-muted-foreground">This month</p>
             </CardContent>
           </Card>
-          <Card className="shadow-md">
+          <Card className="shadow-md hover:shadow-lg transition-shadow duration-200">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
               <TrendingDown className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">${currentExpenses.toFixed(2)}</div>
+              <div className="text-2xl font-bold text-foreground">${currentExpenses.toFixed(2)}</div> {/* Default foreground for neutral expense */}
               <p className="text-xs text-muted-foreground">This month</p>
             </CardContent>
           </Card>
-          <Card className="shadow-md">
+          <Card className="shadow-md hover:shadow-lg transition-shadow duration-200">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Net Flow</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className={`text-2xl font-bold ${netFlow >= 0 ? 'text-green-600' : 'text-destructive'}`}>
+              {/* Use text-destructive for negative, positive color for positive */}
+              <div className={cn(
+                "text-2xl font-bold",
+                netFlow >= 0 ? 'text-[hsl(var(--chart-2))]' : 'text-destructive' // Using chart color for positive, destructive for negative
+              )}>
                 {netFlow >= 0 ? `+$${netFlow.toFixed(2)}` : `-$${Math.abs(netFlow).toFixed(2)}`}
               </div>
               <p className="text-xs text-muted-foreground">Income - Expenses this month</p>
@@ -112,16 +121,15 @@ export default function DashboardPage() {
 
         {/* Main Content Area with Tabs */}
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 md:w-[350px]"> {/* Adjusted grid columns and width */}
+          <TabsList className="grid w-full grid-cols-2 md:w-[350px] bg-muted/60"> {/* Slightly muted background for tabs list */}
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="details">Details</TabsTrigger>
-            {/* Removed Calendar Tab Trigger */}
           </TabsList>
 
           {/* Overview Tab */}
-          <TabsContent value="overview" className="mt-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-              <div className="lg:col-span-4 space-y-4">
+          <TabsContent value="overview" className="mt-6"> {/* Increased margin-top */}
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7"> {/* Increased gap */}
+              <div className="lg:col-span-4 space-y-6"> {/* Increased gap */}
                  <BudgetGoalsOverview
                     goals={currentGoals}
                     transactions={currentTransactions}
@@ -132,7 +140,6 @@ export default function DashboardPage() {
                     categories={categories} // Use state
                     limit={8}
                   />
-                 {/* Moved ExpenseCalendar here */}
                  <ExpenseCalendar transactions={transactions} />
               </div>
               <div className="lg:col-span-3">
@@ -145,13 +152,13 @@ export default function DashboardPage() {
           </TabsContent>
 
           {/* Details Tab */}
-          <TabsContent value="details" className="mt-4">
+          <TabsContent value="details" className="mt-6"> {/* Increased margin-top */}
              <Card className="shadow-md">
                 <CardHeader>
                     <CardTitle>Category Spending & Budgets</CardTitle>
                     <CardDescription>Detailed view of spending per category against budget goals.</CardDescription>
                 </CardHeader>
-                 <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                 <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 pt-4"> {/* Added pt-4 */}
                   {relevantCategories.map((category: Category) => (
                     <CategoryCard
                       key={category.id}
@@ -183,8 +190,6 @@ export default function DashboardPage() {
                  </CardContent>
              </Card>
           </TabsContent>
-
-           {/* Removed Calendar Tab Content */}
 
         </Tabs>
       </main>
