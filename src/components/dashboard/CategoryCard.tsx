@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import type { Category, Transaction, BudgetGoal } from '@/types';
+import LucideIcon from '@/components/icons/LucideIcon'; // Import the new dynamic icon component
 
 interface CategoryCardProps {
   category: Category;
@@ -21,13 +22,15 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, transactions, bud
   const progress = budgetAmount > 0 ? Math.min((totalSpent / budgetAmount) * 100, 100) : 0;
   const isOverBudget = budgetAmount > 0 && totalSpent > budgetAmount;
 
-  const Icon = category.icon;
+  // Use the LucideIcon component with the iconName from the category prop
+  // const Icon = category.icon; // Old way
 
   return (
     <Card className="shadow-md hover:shadow-lg transition-shadow duration-200">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium flex items-center gap-2">
-          <Icon className="w-4 h-4 text-muted-foreground" />
+          {/* Render icon dynamically using LucideIcon component */}
+          <LucideIcon name={category.iconName} className="w-4 h-4 text-muted-foreground" />
           {category.name}
         </CardTitle>
         <span className={cn("text-sm font-semibold", isOverBudget ? "text-destructive" : "text-foreground")}>

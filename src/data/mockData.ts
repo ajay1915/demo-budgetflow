@@ -1,15 +1,16 @@
 import type { Category, Transaction, BudgetGoal } from '@/types';
-import { ShoppingBasket, Home, Car, Ticket, Utensils, Zap, TrendingUp, Tag } from 'lucide-react';
+// Remove direct lucide icon imports here as they are no longer stored in the data structure
+// import { ShoppingBasket, Home, Car, Ticket, Utensils, Zap, TrendingUp, Tag } from 'lucide-react';
 
 export const mockCategories: Category[] = [
-  { id: 'cat1', name: 'Groceries', icon: ShoppingBasket },
-  { id: 'cat2', name: 'Rent/Mortgage', icon: Home },
-  { id: 'cat3', name: 'Transportation', icon: Car },
-  { id: 'cat4', name: 'Entertainment', icon: Ticket },
-  { id: 'cat5', name: 'Dining Out', icon: Utensils },
-  { id: 'cat6', name: 'Utilities', icon: Zap },
-  { id: 'cat7', name: 'Salary', icon: TrendingUp }, // Example Income Category
-  { id: 'cat8', name: 'Miscellaneous', icon: Tag, isCustom: true },
+  { id: 'cat1', name: 'Groceries', iconName: 'ShoppingBasket' },
+  { id: 'cat2', name: 'Rent/Mortgage', iconName: 'Home' },
+  { id: 'cat3', name: 'Transportation', iconName: 'Car' },
+  { id: 'cat4', name: 'Entertainment', iconName: 'Ticket' },
+  { id: 'cat5', name: 'Dining Out', iconName: 'Utensils' },
+  { id: 'cat6', name: 'Utilities', iconName: 'Zap' },
+  { id: 'cat7', name: 'Salary', iconName: 'TrendingUp' }, // Example Income Category
+  { id: 'cat8', name: 'Miscellaneous', iconName: 'Tag', isCustom: true },
 ];
 
 export const mockTransactions: Transaction[] = [

@@ -4,10 +4,11 @@ import type React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
+// import { Badge } from '@/components/ui/badge'; // Badge not currently used
 import type { Transaction, Category } from '@/types';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import LucideIcon from '@/components/icons/LucideIcon'; // Import the new dynamic icon component
 
 interface TransactionListProps {
   transactions: Transaction[];
@@ -49,14 +50,15 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions, categor
           <div className="space-y-4">
             {recentTransactions.map((transaction) => {
               const category = getCategoryInfo(transaction.categoryId);
-              const Icon = category?.icon;
+              // const Icon = category?.icon; // Old way
               const isIncome = transaction.type === 'income';
 
               return (
                 <div key={transaction.id} className="flex items-center gap-4 p-2 rounded-md hover:bg-secondary transition-colors">
                   <Avatar className="h-9 w-9">
-                    {Icon && <Icon className="h-5 w-5 m-auto text-muted-foreground" />}
-                    {!Icon && <AvatarFallback>{category?.name?.charAt(0) ?? '?'}</AvatarFallback>}
+                    {/* Render icon dynamically using LucideIcon component */}
+                    {category?.iconName && <LucideIcon name={category.iconName} className="h-5 w-5 m-auto text-muted-foreground" />}
+                    {!category?.iconName && <AvatarFallback>{category?.name?.charAt(0) ?? '?'}</AvatarFallback>}
                   </Avatar>
                   <div className="flex-1 space-y-1">
                     <p className="text-sm font-medium leading-none">

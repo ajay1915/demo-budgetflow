@@ -3,7 +3,8 @@ import type { LucideIcon } from 'lucide-react';
 export interface Category {
   id: string;
   name: string;
-  icon: LucideIcon | React.FC<React.SVGProps<SVGSVGElement>>; // Allow Lucide icons or custom SVGs
+  // Store the icon name as a string instead of the component
+  iconName: keyof typeof import('lucide-react');
   isCustom?: boolean;
 }
 
