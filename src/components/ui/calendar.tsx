@@ -1,18 +1,28 @@
+
 "use client"
 
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { DayPicker } from "react-day-picker"
+import { DayPicker, type DayContentProps } from "react-day-picker" // Import DayContentProps
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>
+// Extend CalendarProps to include DayContent
+export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
+  components?: {
+    DayContent?: React.ComponentType<DayContentProps>;
+    IconLeft?: React.ComponentType<{ className?: string }>;
+    IconRight?: React.ComponentType<{ className?: string }>;
+  };
+};
+
 
 function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  components, // Destructure components prop
   ...props
 }: CalendarProps) {
   return (
@@ -51,15 +61,20 @@ function Calendar({
         day_range_middle:
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
+        // Add specific modifier class names if needed, e.g., for 'highExpense'
+        // day_modifier_highExpense: "bg-destructive text-destructive-foreground rounded-full", // Example direct styling (can conflict with modifiersStyles)
         ...classNames,
       }}
       components={{
-        IconLeft: ({ className, ...props }) => (
+         // Keep existing icon components or defaults
+        IconLeft: components?.IconLeft ?? (({ className, ...props }) => (
           <ChevronLeft className={cn("h-4 w-4", className)} {...props} />
-        ),
-        IconRight: ({ className, ...props }) => (
+        )),
+        IconRight: components?.IconRight ?? (({ className, ...props }) => (
           <ChevronRight className={cn("h-4 w-4", className)} {...props} />
-        ),
+        )),
+        // Pass through the custom DayContent component if provided
+        DayContent: components?.DayContent,
       }}
       {...props}
     />
@@ -68,3 +83,4 @@ function Calendar({
 Calendar.displayName = "Calendar"
 
 export { Calendar }
+
